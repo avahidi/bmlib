@@ -10,7 +10,7 @@
 #else /* __ASSEMBLER__ */
 
 #include <stdint.h>
-
+#include <stdarg.h>
 
 /* often used attributes */
 
@@ -19,8 +19,10 @@
 #define __weak __attribute__((weak))
 
 #ifdef BMLIB_HAS_PRINTF
-extern void snprintf(char *buffer, int size, const char *fmt, ...);
 extern void printf(const char *fmt, ...);
+extern void vprintf(const char *fmt, va_list ap);
+extern void snprintf(char *buffer, int size, const char *fmt, ...);
+
 extern int putchar(int c); /* defined by YOU */
 #endif
 

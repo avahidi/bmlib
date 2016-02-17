@@ -119,22 +119,27 @@ static void vcprintf(struct write_context *ctx, const char *fmt, va_list args)
     }
 }
 
-/* printf head */
+/*
+ * printf variants
+ */
+
+void vprintf(const char *fmt, va_list ap)
+{
+    struct write_context ctx;
+    ctx.write = printf_write;
+    vcprintf(&ctx, fmt, ap);
+}
+
 void printf(const char *fmt, ...)
 {
     va_list args;
-    struct write_context ctx;
 
     va_start(args, fmt);
-
-    ctx.write = printf_write;
-    vcprintf(&ctx, fmt, args);
-
+    vprintf(fmt, args);
     va_end(args);
 }
 
 
-/* snprintf head */
 void snprintf(char *buffer, int size, const char *fmt, ...)
 {
     va_list args;
