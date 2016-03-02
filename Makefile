@@ -1,9 +1,10 @@
 #
 #
 
-CROSS_COMPILE ?= 
+CROSS_COMPILE ?=
 
-DIR = src src/config
+CONFIG ?= src/config # location of bmconfig.h
+DIR = src $(CONFIG)
 
 #
 SRC_C = $(foreach d,$(DIR),$(wildcard $(d)/*.c))
@@ -13,15 +14,15 @@ SRC_H = $(foreach d,$(DIR),$(wildcard $(d)/*.h))
 OBJ_C = $(patsubst src/%.c,build/%.o,$(SRC_C))
 OBJ_S = $(patsubst src/%.S,build/%.o,$(SRC_S))
 
-CFLAGS += -nostartfiles -nostdlib -ffreestanding 
+CFLAGS += -nostartfiles -nostdlib -ffreestanding
 CFLAGS += -Os -fno-common
 CFLAGS += $(foreach d,$(DIR),-I $(d))
 CFLAGS += $(UFLAGS)
 
-# 
+#
 all: build/libbm.a
 	ls -l build/libbm.a
-	
+
 build/libbm.a: $(OBJ_C) $(OBJ_S) Makefile
 	@echo AR $@
 	@$(CROSS_COMPILE)ar rcs $@ $(OBJ_C) $(OBJ_S)
@@ -44,4 +45,3 @@ build:
 
 clean:
 	rm -rf build
-

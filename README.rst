@@ -22,18 +22,18 @@ It currently includes the following functions
 
 Usage
 -----
-Normally, you should just add the *src* folder to your project then define your
-own *bmconfig.h* file.
 
-While not recommended you could also just use the static library built by
-the Makefile.
-It is straight-forward to cross-compile or supply your own compilation flags.
-To cross-compile for Raspberry Pi 2:
+Build a library using the existing Makefile and define your architecture and configuration via variables.
 
-    make CROSS_COMPILE=arm-none-eabi- UFLAGS="-mcpu=cortex-a7"
+To cross-compile for Raspberry Pi 2 (32-bit ARMv7):
 
-For 64-bit ARM:
+    make CROSS_COMPILE=arm-none-eabi- UFLAGS="-mcpu=cortex-a7" CONFIG=...
 
-    make CROSS_COMPILE=aarch64-linux-gnu- UFLAGS="-mcpu=cortex-a53 -march=armv8-a -mgeneral-regs-only"
+To cross-compile for Raspberry Pi 3 (64-bit ARMv8):
 
-and so on...
+    make CROSS_COMPILE=aarch64-linux-gnu- UFLAGS="-mcpu=cortex-a53 -march=armv8-a -mgeneral-regs-only" CONFIG=...
+
+Notes
+ * UFLAGS is added to gcc CFLAGS.
+ * CONFIG should point to the folder holding *bmconfig.h*. The default value is *src/config*
+ * If you use printf() you need to provide your own *int putchar(int c)*

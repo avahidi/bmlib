@@ -68,16 +68,22 @@ static void printf_int(struct write_context *ctx, int i)
         ctx->write(ctx, buffer[--f]);
 }
 
-static void printf_hex(struct write_context *ctx, uint32_t n, int size)
+static void printf_hex32(struct write_context *ctx, uint32_t n)
 {
     uint32_t h, i;
-    for(i = size * 8; i; ) {
-        i -= 4;
-        h = (n >> i) & 15;
+    for(i = 8; i; i--) {
+        h = (n >> 28) & 15;
+	n <<= 4;
         if(h < 10) h += '0';
         else h += 'A' - 10;
         ctx->write(ctx, h);
     }
+}
+
+static void printf_hex64(struct write_context *ctx, uint64_t n)
+{
+  printf_hex32( ctx, (uint32_t)(n >> 32));
+  printf_hex32( ctx, (uint32_t)n);
 }
 
 static void vcprintf(struct write_context *ctx, const char *fmt, va_list args)
@@ -99,8 +105,17 @@ static void vcprintf(struct write_context *ctx, const char *fmt, va_list args)
             case 'd':
                 printf_int(ctx, va_arg(args, int));
                 break;
+            case 'X':
+#ifdef BMLIB_HAS_PRINTF_X64
+	      /* X is 64-bit hex */
+	      printf_hex64(ctx, va_arg(args, uint64_t));
+	      break;
+#else
+
+	      /* falls through */
+#endif
             case 'x':
-                printf_hex(ctx, va_arg(args, uint32_t), 4);
+                printf_hex32(ctx, va_arg(args, uint32_t));
                 break;
             case 'c':
                 ctx->write(ctx, va_arg(args, int));

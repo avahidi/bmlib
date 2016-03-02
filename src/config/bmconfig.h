@@ -7,6 +7,7 @@
  * This is just an all-in sample and you should supply your own.
  */
 
+#define BMLIB_HAS_PRINTF_X64 /* %X prints 64-bit hex */
 #define BMLIB_HAS_PRINTF /* printf, sprintf */
 #define BMLIB_HAS_STRING /* strlen, strcpy etc + memset & memcpy */
 #define BMLIB_HAS_DIV10  /* divide by 10 to avoid */
