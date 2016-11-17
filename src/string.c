@@ -18,11 +18,21 @@ int strlen(const char *s)
 
 void strcpy(char *dst, const char *src)
 {
-
     for(; *src != '\0'; )
         *dst++ = *src++;
     *dst = '\0';
 }
+
+void strncpy(char *dst, const char *src, int n)
+{
+    char *tmp = dst;
+    for(; n > 0 && *src != '\0'; n--)
+        *dst++ = *src++;
+
+    while(n-- > 0)
+        *dst++ = '\0';
+}
+
 
 char *strchr(char *s, char c)
 {

@@ -29,6 +29,8 @@ extern int putchar(int c); /* defined by YOU */
 #ifdef BMLIB_HAS_STRING
 extern int strlen(const char *s);
 extern void strcpy(char *dst, const char *src);
+extern void strncpy(char *dst, const char *src, int n);
+
 extern char *strchr(char *s, char c);
 
 extern int strcmp(const char *s1, const char *s2);

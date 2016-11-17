@@ -40,8 +40,14 @@ build/%.o: src/%.S Makefile build $(SRC_H)
 
 #
 
+test: all
+	make -C test test
+
+#
+
 build:
 	mkdir build
 
 clean:
 	rm -rf build
+	make -C test clean
