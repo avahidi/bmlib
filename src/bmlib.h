@@ -35,10 +35,18 @@ extern char *strchr(char *s, char c);
 
 extern int strcmp(const char *s1, const char *s2);
 extern int strncmp(const char *s1, const char *s2, int n);
+#endif
 
+#ifdef BMLIB_HAS_STRING_MEM
 extern void memcpy(void *dst, const void *src, int n);
 extern void memset(void *dst, int c, int n);
 #endif
+
+#ifdef BMLIB_HAS_STRING_STRTOK
+extern char *strtok(char *str, const char *delim);
+extern char *strtok_r(char *str, const char *delim, char **save);
+#endif
+
 
 #ifdef BMLIB_HAS_DIV10
 extern uint32_t divu10(uint32_t n);

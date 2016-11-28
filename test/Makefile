@@ -14,7 +14,7 @@ LFLAGS += -lbm
 all: build/test.exe
 
 
-build/test.exe: src/*.c build Makefile
+build/test.exe: src/*.c build Makefile $(BASE)/build/
 	gcc  $(CFLAGS) src/*.c $(LFLAGS) -o $@
 	objdump -d $@ > $@.dis
 

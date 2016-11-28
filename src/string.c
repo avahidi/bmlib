@@ -66,8 +66,9 @@ int strncmp(const char *s1, const char *s2, int n)
     }
     return 0;
 }
+#endif /*  BMLIB_HAS_STRING */
 
-
+#ifdef BMLIB_HAS_STRING_MEM
 void memcpy(void *dst, const void *src, int n)
 {
     char *out = (char *)dst;
@@ -86,5 +87,41 @@ void memset(void *dst, int c, int n)
         *out++ = c;
     }
 }
+#endif /* BMLIB_HAS_STRING_MEM */
 
-#endif /*  BMLIB_HAS_STRING */
+#ifdef BMLIB_HAS_STRING_STRTOK
+char *strtok(char *str, const char *delim)
+{
+    static char *save;
+    return strtok_r(str, delim, &save);
+}
+
+char *strtok_r(char *str, const char *delim, char **save)
+{
+    char *e;
+
+    if(!str) {
+	str = *save;
+	if(!str)
+	    return str;
+    }
+
+    /* delim before */
+    for(;  *str != '\0' && strchr(delim, *str); str++)
+	;
+
+    if( *str == '\0')
+	return 0;
+
+    /* end of text */
+    for(e = str; *e != '\0' && !strchr(delim, *e); e++)
+	;
+
+    if( *e != '\0')
+	*e++ = '\0';
+
+    *save = e;
+    return str;
+}
+
+#endif /* BMLIB_HAS_STRING_STRTOK */
