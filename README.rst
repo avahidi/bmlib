@@ -5,7 +5,6 @@ Library of stuff often needed in bare metal projects.
 
 It is more or less a small fraction (say 1%) of libc functionality in a tiny tiny package.
 
-
 Who should use this?
 --------------------
 
@@ -17,9 +16,9 @@ What does it provide?
 
 It currently includes the following functions
 
- * from stdio: printf(), snprintf() and vprintf()
- * from string: strXXX() and memXXX()
- * divu10() *(to avoid libgcc dependency of __eabi_div )*
+* from stdio.h: printf, snprintf and vprintf
+* from string.h: memcpy, memset, strlen, strcpy, strncpy, strcmp, strncmp, strchr, strtok and strrok_r
+* from elsewhere: divu10 *(to avoid libgcc dependency of __eabi_div )*
 
 You can include/exclude groups of functions by editing bmconfig.h
 
@@ -37,6 +36,19 @@ To cross-compile for Raspberry Pi 3 (64-bit ARMv8):
     make CROSS_COMPILE=aarch64-linux-gnu- UFLAGS="-mcpu=cortex-a53 -march=armv8-a -mgeneral-regs-only" CONFIG=...
 
 Notes
- * UFLAGS is added to gcc CFLAGS.
- * CONFIG should point to the folder holding *bmconfig.h*. The default value is *src/config*
- * If you use printf() you need to provide your own *int putchar(int c)*
+
+* UFLAGS is added to gcc CFLAGS.
+* CONFIG should point to the folder holding *bmconfig.h*. The default value is *src/config*
+* If you use printf() you need to provide your own *int putchar(int c)*
+
+
+Footprint
+---------
+
+The footprint of the full library is shown below for various architectures:
+
+* AMD x64: 1379 + 15 bytes (text + data/bss)
+* ARM v7: 1304 + 11
+* ARM v8: 1704 + 15
+
+You can reduce footprint further by excluding some functions in bmconfig.h.
