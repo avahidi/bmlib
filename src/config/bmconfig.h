@@ -3,8 +3,9 @@
 
 /*
  * This is the library configuration file, which defines what parts are included.
+ * Comment definitions to disable specific parts.
  *
- * This is just an all-in sample and you should supply your own.
+ * Note that you can provide a different bmconfig.h file by setting the CONFIG make variable.
  */
 
 #define BMLIB_HAS_PRINTF_X64 /* %X prints 64-bit hex */

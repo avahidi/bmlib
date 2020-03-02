@@ -26,18 +26,20 @@ all: build/libbm.a
 build/libbm.a: $(OBJ_C) $(OBJ_S) Makefile
 	@echo AR $@
 	@$(CROSS_COMPILE)ar rcs $@ $(OBJ_C) $(OBJ_S)
-	@$(CROSS_COMPILE)objdump -d -h $@ > $@.dis
 
 build/%.o: src/%.c Makefile build $(SRC_H)
 	@echo GCC $<
 	@$(CROSS_COMPILE)gcc $(CFLAGS) -c $< -o $@
-	@$(CROSS_COMPILE)objdump -d -h $@ > $@.dis
 
-build/%.o: src/%.S Makefile build $(SRC_H)
-	@echo GCC (ASM) $<
-	@$(CROSS_COMPILE)gcc $(CFLAGS) -c $< -o $@
-	@$(CROSS_COMPILE)objdump -d -h $@ > $@.dis
+build/%.dis: build/%.a
+	@echo OBJDUMP $<
+	@$(CROSS_COMPILE)objdump -d $< > $@
 
+show: build/libbm.dis
+	less $<
+
+stats: build/libbm.a
+	@size -t $<
 #
 
 test: all
