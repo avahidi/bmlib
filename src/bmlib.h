@@ -21,7 +21,7 @@
 #ifdef BMLIB_HAS_PRINTF
 extern void printf(const char *fmt, ...);
 extern void vprintf(const char *fmt, va_list ap);
-extern void snprintf(char *buffer, int size, const char *fmt, ...);
+extern int snprintf(char *buffer, int size, const char *fmt, ...);
 
 extern int putchar(int c); /* defined by YOU */
 #endif
@@ -31,7 +31,7 @@ extern int strlen(const char *s);
 extern void strcpy(char *dst, const char *src);
 extern void strncpy(char *dst, const char *src, int n);
 
-extern char *strchr(char *s, char c);
+extern char *strchr(const char *s, char c);
 
 extern int strcmp(const char *s1, const char *s2);
 extern int strncmp(const char *s1, const char *s2, int n);

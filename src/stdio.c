@@ -105,6 +105,11 @@ static void vcprintf(struct write_context *ctx, const char *fmt, va_list args)
             case 'd':
                 printf_int(ctx, va_arg(args, int));
                 break;
+            case 'P':
+#ifdef BMLIB_HAS_PRINTF_X64
+                printf_string(ctx, "0x");
+#endif
+	      /* falls through */
             case 'X':
 #ifdef BMLIB_HAS_PRINTF_X64
 	      /* X is 64-bit hex */
@@ -114,6 +119,9 @@ static void vcprintf(struct write_context *ctx, const char *fmt, va_list args)
 
 	      /* falls through */
 #endif
+            case 'p':
+                printf_string(ctx, "0x");
+	      /* falls through */
             case 'x':
                 printf_hex32(ctx, va_arg(args, uint32_t));
                 break;
@@ -155,7 +163,7 @@ void printf(const char *fmt, ...)
 }
 
 
-void snprintf(char *buffer, int size, const char *fmt, ...)
+int snprintf(char *buffer, int size, const char *fmt, ...)
 {
     va_list args;
     struct write_context ctx;
@@ -169,8 +177,8 @@ void snprintf(char *buffer, int size, const char *fmt, ...)
     vcprintf(&ctx, fmt, args);
 
     buffer[ctx.curr] = '\0';
-
     va_end(args);
+    return ctx.curr + 1;
 }
 
 #endif /* BMLIB_HAS_PRINTF */

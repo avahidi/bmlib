@@ -47,7 +47,7 @@ void test_string_strtok()
     const char *answer3[] = { "b", 0 };
 
     const char *empty[] = { 0 };
-    const char *null = 0;
+    char *null = 0;
 
     test_group_start("string_strtok");
 

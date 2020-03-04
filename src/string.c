@@ -34,11 +34,11 @@ void strncpy(char *dst, const char *src, int n)
 }
 
 
-char *strchr(char *s, char c)
+char *strchr(const char *s, char c)
 {
     do {
         if(*s == c)
-            return s;
+            return (char *)s;
     } while(*s++ != '\0');
 
     return 0;

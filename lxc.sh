@@ -15,7 +15,7 @@ lxc file push -r  . bmlib/home/user/bmlib
 sleep 5
 
 lxc exec bmlib -- su -l user << EOF
-set -ex
+set -e
 sudo apt update
 sudo apt install --no-install-recommends -y git mg make build-essential gcc-arm-none-eabi gcc-aarch64-linux-gnu gcc-mips-linux-gnu gcc-powerpc-linux-gnu gcc-riscv64-linux-gnu
 
@@ -23,40 +23,49 @@ sudo chown user:user -R ~/bmlib
 cd bmlib
 
 # amd64
+echo AMD64
 make 
 make test
 make stats
 mv build ~/bmlib_amd64
 
-# arm32m
+# x86
+echo X64
 make UFLAGS="-m32" stats 
 mv build ~/bmlib_x86
 
 # arm32m
+echo ARM32m
 make CROSS_COMPILE=arm-none-eabi- UFLAGS="-mcpu=cortex-m4" stats 
 mv build ~/bmlib_arm32m
 
 # arm32
+echo ARM32
 make CROSS_COMPILE=arm-none-eabi- UFLAGS="-mcpu=cortex-a7" stats 
 mv build ~/bmlib_arm32
 
 # arm64
+echo ARM64
 make CROSS_COMPILE=aarch64-linux-gnu- UFLAGS="-mcpu=cortex-a53 -march=armv8-a -mgeneral-regs-only" stats
 mv build ~/bmlib_arm64
 
 # MIPS32
+echo MIPS32
 make CROSS_COMPILE=mips-linux-gnu- stats
 mv build ~/bmlib_mips32
 
 # PPC32
+echo PPC32
 make CROSS_COMPILE=powerpc-linux-gnu- UFLAGS="-mcpu=power8" stats 
 mv build ~/bmlib_ppc32
 
 # PPC64
+echo PPC64
 make CROSS_COMPILE=powerpc-linux-gnu- UFLAGS="-mcpu=powerpc64" stats 
 mv build ~/bmlib_ppc64
 
 # RISCV-64
+echo RISC-V
 make CROSS_COMPILE=riscv64-linux-gnu- stats 
 mv build ~/bmlib_riscv64
 EOF
