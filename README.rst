@@ -1,16 +1,15 @@
 bmlib - a bare metal library
 ============================
 
-Library of things often needed in bare metal projects.
+Library of things often needed in bare metal projects. It implements 1% of what glibc and musl provide, in a tiny tiny package.
 
-It is more or less a small fraction (say 1%) of libc functionality in a tiny tiny package.
 
 Who should use this?
 --------------------
 
 This is probably only useful to people working on 32 or 64-bit embedded systems.
 
-Assume you are writing low-level code and want to print some debug messages. bmlib allows you to do that with minimal code.
+Assume you are writing bare-metal code and want to print some debug messages. bmlib allows you to do that with minimal code.
 
 
 What does it provide?
@@ -52,10 +51,17 @@ This is what differs:
 
 * printf()/vprintf() don't return the number of printed characters
 * formatting flags are not supported in printf() functions
-* '%x' and '%X' print 32 and 64-bit hexadecimals including leading zeros (similar to %08lx)
+* floating points (%f/e/g/E/G) is not supported
+* '%n' is not supported
+* '%x' and '%X' print 32 and 64-bit hexadecimals including leading zeros (corresponding to %08x and %016lx)
 * '%p' and '%P' start with '0x', behave otherwise like '%x' and '%x'
 
-These were chosen based on authors own experience with bare-metal development. A fully compliant printf() such as `Marco Paland's implementation <https://github.com/mpaland/printf>`_ is significantly larger.
+
+These were chosen based on authors own experience with bare-metal development, and to keep the library as small as possible. For example not supporting %n was to remove a common `attack vector <https://en.wikipedia.org/wiki/Uncontrolled_format_string>`_, while excluding formatting flags removed something complex but very seldom needed in embedded system (unless to print addresses, which is already supported by %x and %p).
+
+
+But if you need a fully compliant printf() you might need to use another library such as `Marco Paland's printf implementation <https://github.com/mpaland/printf>`_. Note that this library is 2-3 larger than the entire bmlib, so libc compliance comes with a cost.
+
 
 Building
 --------
@@ -76,27 +82,28 @@ The user-supplied UFLAGS is appended to the current compiler flags CFLAGS.
 Footprint
 ---------
 
-The code has been written to have minimal dynamic footprint (i.e. stack usage), although the exact numbers depend on your application.
+The code has been written to have minimal dynamic footprint (zero heap usage and minimal stack usage), although the exact numbers depend on your application.
 
 Static footprint (i.e. code size) is easier to quantify with "make stats"::
-
+   
     make stats
-    ...   
-   text	   data	    bss	    dec	    hex	filename
-    545	      0	      8	    553	    229	string.o (ex build/libbm.a)
-   1469	      0	      0	   1469	    5bd	stdio.o (ex build/libbm.a)
-     99	      0	      0	     99	     63	div10.o (ex build/libbm.a)
-   2113	      0	      8	   2121	    849	(TOTALS)
+    ...    
+       text	   data	    bss	    dec	    hex	filename
+        626	      0	      8	    634	    27a	string.o (ex build/libbm.a)
+       1524	      0	      0	   1524	    5f4	stdio.o (ex build/libbm.a)
+        138	      0	      0	    138	     8a	div10.o (ex build/libbm.a)
+       2288	      0	      8	   2296	    8f8	(TOTALS)
+
 
 Note that code size changes drastically with each architecture. Here is ARMv7-M for comparison::
 
     make CROSS_COMPILE=arm-none-eabi- UFLAGS="-mcpu=cortex-m4" clean stats
     ...
-   text	   data	    bss	    dec	    hex	filename
-    288	      0	      4	    292	    124	string.o (ex build/libbm.a)
-    574	      0	      0	    574	    23e	stdio.o (ex build/libbm.a)
-     34	      0	      0	     34	     22	div10.o (ex build/libbm.a)
-    896	      0	      4	    900	    384	(TOTALS)
+    text	   data	    bss	    dec	    hex	filename
+     288	      0	      4	    292	    124	string.o (ex build/libbm.a)
+     574	      0	      0	    574	    23e	stdio.o (ex build/libbm.a)
+      34	      0	      0	     34	     22	div10.o (ex build/libbm.a)
+     896	      0	      4	    900	    384	(TOTALS)
 
 
 These numbers can be reduced by disabling things you don't need.
